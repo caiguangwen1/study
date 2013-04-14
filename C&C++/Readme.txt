@@ -1,0 +1,1 @@
+This repository is my some study notes for C&C++.
