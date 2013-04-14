@@ -1,0 +1,1 @@
+This repository is some study notes about the book named "High quality programming guide".
