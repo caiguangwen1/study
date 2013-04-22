@@ -33,3 +33,17 @@
     rInt = b;           // rInt = 100, a = 100;
     int *p = &c;	// *p = 1000, c=1000;
     p = &b;		// *p = 100, c=1000;
+10、定义带参数的宏时，宏名和左括号之间不能有空格，否则会出错。
+    #define TEXT(str) #str
+    带参数的宏名和个体应该用括号括起来，例如
+    #define SQUERE(x) (x*x)
+    尽量不要在宏中使用自增或自减操作，例如
+    int i = 5;
+    int n = SQUERE(i++);等价于int n = (i++) *(i++)结果为5*6=30而不是5*5=25。
+    宏体中换行要使用"\"来进行连接。
+    构串操作符"#"在宏中是将宏中的参数转换成字符串，合并操作符"##"是将宏中的参数合并成一个新的标识符。例如：
+    #define TEXT(str) #str
+    int abc = 100
+    char a[] = TEXT(abc); ==> a="100";
+    #define MERGE(x, y) x##y
+    int n = MERGE(a, bc); ==> n=100;
