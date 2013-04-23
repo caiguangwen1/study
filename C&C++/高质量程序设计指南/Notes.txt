@@ -110,3 +110,13 @@
     void Foo(int x, int y);           // 若关键字inline只放在声明中则不是内联函数
     inline void Foo(int x, int y){}   // 若关键字inline在声明和定义都有则也是内联函数
     使用内联函数可以提高运行效率，但是内联函数只能在debug版本中才能调试，Release版本不能调试。
+15、C++新式转换：
+    const_cast：cast away the constness，常量移除转换，用作对象的常量性移除，是c++转换中唯一具有移除常量性的转换；
+    dynamic_cast ：主要用作安全向下转型，也就是说用来决定某个对象是否归属于继承体系中的某个类型，比如is_a判断；
+    reinterpret_cast：意图执行低级转换，具体结果可能依赖编译器，因此不可移植；
+    static_cast：用来强迫隐式转换，如把non_const转换为const， int转换为double等，但是不能把const转换为non_const，
+      移除常量性只能使用const_cast。
+    const_cast<dest_type>(src_obj)
+    dynamic_cast<dest_type>(src_obj)
+    reinterpret_cast<dest_type>(src_obj)
+    static_cast<dest_type>(src_obj)
