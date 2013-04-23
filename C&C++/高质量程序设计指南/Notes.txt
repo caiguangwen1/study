@@ -47,3 +47,66 @@
     char a[] = TEXT(abc); ==> a="100";
     #define MERGE(x, y) x##y
     int n = MERGE(a, bc); ==> n=100;
+11、基类的析构函数必须为虚函数，否则其派生类无法析构，会造成内存泄漏。例如：
+    class Base
+    {
+    public:
+      virtual ~Base()
+        {cout<<"Base::~Base()"<<endl;}
+    }
+    class Derived : Base
+    {
+    public:
+      virtual ~Derived()
+        {cout<<"Derived::~Derived()"<<endl;}
+    }
+    int main()
+    {
+      Base *pBase = (Base *)new Derived;
+      delete pBase;
+      return 0;
+    }
+    output: Derived::~Derived()
+    output: Base::~Base()
+    若上例基类Base的析构函数~Base()不是虚函数，则输出为：Base::~Base()，派生类Derived无法析构，造成泄漏，部分平台会出错导致程序崩溃。
+12、隐藏和覆盖。规则一：若派生类和基类中，函数名相同，参数列表有差异，不论基类函数是否有virtual，一律为隐藏；
+    规则二：若派生类和基类中，函数名和参数列表都相同，但是基类函数没有virtual，则基类函数被隐藏。例如：
+    class Base
+    {
+      virtual float f(float x)
+        {cout<<"Base::f(float)"<< x << endl;}
+      void getInt(float x)
+        {cout<<"Base::getInt(float)"<< x << endl;}
+      void h(int x)
+        {cout<<"Base::h(int)"<< x << endl;}
+    }
+    class Derived : Base
+    {
+      virtual float f(float x)      // 覆盖
+        {cout << "Derived::f(float)" << x << endl;}
+      void getInt(int x)            // 隐藏
+        {cout << "Derived::getInt(int) << x << endl;}
+      void h(int x)                 // 隐藏
+        {cout << "Derived::h(int)" << x << endl;}
+    }
+    int main()
+    {
+      Derived d;
+      Base *pBase = &d;
+      Derived *pDerived = &d;
+      pBase->f(3.14);           // output: Derived::f(float) 3.14
+      pDerived->f(3.14);        // output: Derived::f(float) 3.14
+      pBase->getInt(3.14);      // output: Base::getInt(float) 3.14
+      pDerived->getInt(3.14);   // output: Derived::getInt(int) 3
+      pBase->h(3.14);           // output: Base::h(int) 3
+      pDerived->h(3.14);        // output: Derived::h(int) 3
+      return 0;
+    }
+13、使用typeid()可以取得类型名。例如：
+    char a[] = "100";
+    cout << typeid(a).name() << endl;     // output: char[4]
+    上例 cout << typeid(d).name() << endl;    // output: Derived
+14、内联函数必须是把inline放在函数定义中。例如：
+    void Foo(int x, int y);           // 若关键字inline只放在声明中则不是内联函数
+    inline void Foo(int x, int y){}   // 若关键字inline在声明和定义都有则也是内联函数
+    使用内联函数可以提高运行效率，但是内联函数只能在debug版本中才能调试，Release版本不能调试。
